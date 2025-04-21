@@ -1,16 +1,6 @@
 #ifndef CAKE_CMD_H_
 #define CAKE_CMD_H_
 
-#include <stdlib.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
 typedef struct {
     size_t size;
     size_t capacity;
@@ -18,7 +8,9 @@ typedef struct {
 } Cake_CMD;
 
 void cake_cmd_print(Cake_CMD cmd);
-#define cake_cmd_push cake_da_appned
+
+#define cake_cmd_push(cmd, ...) \
+    cake_da_append_many(cmd, (sizeof((const char*[]){__VA_ARGS__})/sizeof(const char*)), ((const char*[]){__VA_ARGS__}))
 
 pid_t cake_cmd_exec(Cake_CMD cmd);
 bool cake_cmd_wait(pid_t cpid);

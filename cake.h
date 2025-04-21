@@ -3,7 +3,14 @@
 #define CAKE_H_
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdbool.h>
 #include <assert.h>
+#include <string.h>
+#include <errno.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #define CAKE_DA_INIT_CAPACITY 256 
 #define cake_da_reserve(da, size)                                       \
@@ -25,8 +32,12 @@
         (cmd)->size += (items_count);                                               \
     } while (0)
 
-#define cake_da_appned(cmd, ...) \
-    cake_da_append_many(cmd, (sizeof((const char*[]){__VA_ARGS__})/sizeof(const char*)), ((const char*[]){__VA_ARGS__}))
+#define cake_da_append(da, item)         \
+do {                                     \
+    cake_da_reserve((da), (da)->size+1); \
+    (da)->es[(da)->size] = (item);       \
+    (da)->size += 1;                     \
+} while (0)
 
 #define TEMP_ALLOC_CAPACITY 8*1024*1024
 static size_t temp_alloc_idx = 0;
@@ -55,5 +66,15 @@ void* cake_temp_alloc(size_t size)
 #define CAKE_HEAP_IMPLEMENTATION
 #include "./extensions/cake_heap.h"
 #endif // CAKE_EXR_HEAP
+
+#ifdef CAKE_EXT_STRING
+#define CAKE_STRING_IMPLEMENTATION
+#include "./extensions/cake_string.h"
+#endif // CAKE_EXT_STRING
+
+#ifdef CAKE_EXT_FS
+#define CAKE_FS_IMPLEMENTATION
+#include "./extensions/cake_fs.h"
+#endif // CAKE_EXT_FS
 
 #endif // CAKE_H_

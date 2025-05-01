@@ -40,19 +40,25 @@ do {                                     \
 } while (0)
 
 #define TEMP_ALLOC_CAPACITY 8*1024*1024
-static size_t temp_alloc_idx = 0;
+static size_t temp_alloc_size = 0;
 static char temp_alloc[TEMP_ALLOC_CAPACITY] = {0};
 
-void* cake_temp_alloc(size_t size);
+void* cake_talloc_poll(size_t size);
+void  cake_talloc_reset();
 
 #ifdef CAKE_IMPLEMENTATION
 
-void* cake_temp_alloc(size_t size)
+void* cake_talloc_poll(size_t size)
 {
-    assert(temp_alloc_idx+size < TEMP_ALLOC_CAPACITY && "temporary allocator overflow");
-    void* space = &temp_alloc[temp_alloc_idx];
-    temp_alloc_idx+=size;
+    assert(temp_alloc_size+size < TEMP_ALLOC_CAPACITY && "temporary allocator overflow");
+    void* space = &temp_alloc[temp_alloc_size];
+    temp_alloc_size+=size;
     return space;
+}
+
+void cake_talloc_reset()
+{
+    temp_alloc_size = 0;
 }
 
 #endif // CAKE_IMPLEMENTATION

@@ -25,8 +25,7 @@ void cake_string_print(Cake_String cs)
 Cake_String cake_string_from_cstr(char* cstr)
 {
     Cake_String cs = {0};
-    // TODO: what about the temporary allocator ?? 
-    cs.es = cake_talloc_poll(sizeof(cstr));
+    cs.es = malloc(sizeof(cstr));
     for (size_t i=0; i<strlen(cstr); ++i) {
         cs.es[i] = cstr[i];
     }

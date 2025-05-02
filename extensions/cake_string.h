@@ -10,7 +10,9 @@ typedef struct {
 void cake_string_print(Cake_String cs); 
 
 Cake_String cake_string_from_cstr(char* cstr); 
+
 void cake_string_trim_right(Cake_String *cs); 
+bool cake_string_eq(Cake_String cs1, Cake_String cs2); 
 
 #ifdef CAKE_STRING_IMPLEMENTATION 
 
@@ -42,5 +44,17 @@ void cake_string_trim_right(Cake_String *cs)
     cs->size = new_size;
 }
 
+bool cake_string_eq(Cake_String cs1, Cake_String cs2)
+{
+    if (cs1.size != cs2.size) return false;
+    for (size_t i=0; i<cs1.size; ++i) {
+        if (cs1.es[i] != cs2.es[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 #endif // CAKE_STRING_IMPLEMENTATION 
 #endif // CAKE_STRING_H_ 
+

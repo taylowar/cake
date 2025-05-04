@@ -18,20 +18,21 @@ bool cake_string_eq(Cake_String cs1, Cake_String cs2);
 
 void cake_string_print(Cake_String cs)
 {
+    printf("`");
     for (size_t i=0; i<cs.size; ++i) {
         printf("%c", cs.es[i]);
     }
-    printf("\n");
+    printf("`\n");
 }
 
 Cake_String cake_string_from_cstr(char* cstr)
 {
     Cake_String cs = {0};
-    cs.es = malloc(sizeof(cstr));
-    for (size_t i=0; i<strlen(cstr); ++i) {
+    cs.es = malloc(sizeof(cstr)+strlen(cstr));
+    cs.size = strlen(cstr);
+    for (size_t i=0; i<cs.size; ++i) {
         cs.es[i] = cstr[i];
     }
-    cs.size = strlen(cstr);
     return cs;
 }
 
@@ -57,4 +58,3 @@ bool cake_string_eq(Cake_String cs1, Cake_String cs2)
 
 #endif // CAKE_STRING_IMPLEMENTATION 
 #endif // CAKE_STRING_H_ 
-

@@ -30,7 +30,7 @@ void cake_fs_file_text_from_file(FILE* fd, Cake_FileText *cft)
 {
     // Just know that this function does not close the file descriptor for your
     assert(fd != NULL && "Your file descriptor is NULL mang");
-    char line[256];
+    char line[512];
     while (fgets(line, sizeof(line), fd) != NULL) {
         Cake_String cs_line = cake_string_from_cstr(line);
         cake_string_trim_right(&cs_line);

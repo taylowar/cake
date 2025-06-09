@@ -43,6 +43,7 @@ do {                                     \
 static size_t temp_alloc_size = 0;
 static char temp_alloc[TEMP_ALLOC_CAPACITY] = {0};
 
+// TODO: rename to `reserve`
 void* cake_talloc_poll(size_t size);
 void  cake_talloc_reset();
 

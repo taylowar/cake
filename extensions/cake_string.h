@@ -28,11 +28,14 @@ void cake_string_print(Cake_String cs)
 Cake_String cake_string_from_cstr(char* cstr)
 {
     Cake_String cs = {0};
-    cs.es = malloc(sizeof(cstr)+strlen(cstr));
+    //cs.es = malloc(sizeof(cstr)+strlen(cstr));
+    cs.es = (char*)cake_talloc_poll(sizeof(cstr)*strlen(cstr)+1);
     cs.size = strlen(cstr);
     for (size_t i=0; i<cs.size; ++i) {
         cs.es[i] = cstr[i];
     }
+    cs.es[cs.size] = 0;
+    cs.size+=1;
     return cs;
 }
 

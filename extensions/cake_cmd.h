@@ -29,6 +29,8 @@ void cake_cmd_print(Cake_CMD cmd)
 
 pid_t cake_cmd_exec(Cake_CMD cmd)
 {
+    // TODO: cmd.es is not NULL terminated so you should append `0` at the end
+    cake_cmd_push(&cmd, 0);
     pid_t cpid = fork();
     if (cpid < 0) {
         fprintf(stderr, "ERROR: could not fork child: %s\n", strerror(errno));

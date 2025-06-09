@@ -39,5 +39,6 @@ void cake_fs_file_text_from_file(FILE* fd, Cake_FileText *cft)
         }
     }
 }
+
 #endif // CAKE_FS_IMPLEMENTATION
 #endif // CAKE_FS_H_

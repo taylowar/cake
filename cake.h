@@ -39,12 +39,19 @@ do {                                     \
     (da)->size += 1;                     \
 } while (0)
 
-#define TEMP_ALLOC_CAPACITY 8*1024*1024
+#define cake_da_free(da) \
+do {                     \
+    free((da)->es);      \
+    (da)->size = 0;      \
+    (da)->capacity = 0;  \
+} while (0)
+
+#define TEMP_ALLOC_CAPACITY 64*1024*1024
 static size_t temp_alloc_size = 0;
 static char temp_alloc[TEMP_ALLOC_CAPACITY] = {0};
 
-// TODO: rename to `reserve`
 void* cake_talloc_poll(size_t size);
+char* cake_talloc_sprintf(const char* format, ...);
 void  cake_talloc_reset();
 
 #ifdef CAKE_IMPLEMENTATION
@@ -55,6 +62,20 @@ void* cake_talloc_poll(size_t size)
     void* space = &temp_alloc[temp_alloc_size];
     temp_alloc_size+=size;
     return space;
+}
+
+char* cake_talloc_sprintf(const char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    int n = vsnprintf(NULL, 0, format, args);
+    va_end(args);
+    char* allocd_str = cake_talloc_poll(n+1); 
+    assert(allocd_str != NULL && "Extend the size of the temporary allocator");
+    va_start(args, format);
+    vsnprintf(allocd_str, n+1, format, args);
+    va_end(args);
+    return allocd_str;
 }
 
 void cake_talloc_reset()

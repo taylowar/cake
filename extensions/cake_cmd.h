@@ -12,7 +12,7 @@ void cake_cmd_print(Cake_CMD cmd);
 #define cake_cmd_push(cmd, ...) \
     cake_da_append_many(cmd, (sizeof((const char*[]){__VA_ARGS__})/sizeof(const char*)), ((const char*[]){__VA_ARGS__}))
 
-pid_t cake_cmd_exec(Cake_CMD cmd);
+pid_t cake_cmd_exec(Cake_CMD *cmd);
 bool cake_cmd_wait(pid_t cpid);
 void cake_cmd_reset(Cake_CMD *cmd);
 
@@ -27,17 +27,17 @@ void cake_cmd_print(Cake_CMD cmd)
     printf("\n");
 }
 
-pid_t cake_cmd_exec(Cake_CMD cmd)
+pid_t cake_cmd_exec(Cake_CMD *cmd)
 {
     // TODO: cmd.es is not NULL terminated so you should append `0` at the end
-    cake_cmd_push(&cmd, 0);
+    cake_cmd_push(cmd, 0);
     pid_t cpid = fork();
     if (cpid < 0) {
         fprintf(stderr, "ERROR: could not fork child: %s\n", strerror(errno));
         exit(1);
     } 
     if (cpid == 0) {
-        if (execvp(cmd.es[0], (char * const*)cmd.es) < 0) {
+        if (execvp(cmd->es[0], (char * const*)cmd->es) < 0) {
             fprintf(stderr, "ERROR: could not execute child: %s\n", strerror(errno));
             exit(1);
         }
